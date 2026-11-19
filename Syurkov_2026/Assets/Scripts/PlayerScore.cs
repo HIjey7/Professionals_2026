@@ -2,24 +2,25 @@ using TMPro;
 using UnityEngine;
 public class PlayerScore : MonoBehaviour
 {
-    [SerializeField] private TMP_Text scoreText;
-    private int score = 0;
-    private int totalCoins = 0;
+    [SerializeField] private TMP_Text _scoreText;
+    private int _score = 0;
+    private int _totalCoins = 0;
 
-    void Start()
+    private void Start()
     {
-        totalCoins = FindObjectsByType<CoinPickup>().Length;
+        _totalCoins = FindObjectsByType<CoinPickup>().Length;
         RefreshText();
     }
 
     public void AddScore()
     {
-        score++;
+        _score++;
         
-        if (score == totalCoins) 
+        if (_score == _totalCoins) 
         {
-            scoreText.text = $"Победа! Все монеты в количестве {totalCoins} собраны.";
-        } else 
+            _scoreText.text = "Победа!";
+        }
+        else 
         {
             RefreshText();
         }
@@ -29,7 +30,7 @@ public class PlayerScore : MonoBehaviour
 
     private void RefreshText()
     {
-        scoreText.text = "Счет: " + score;
+        _scoreText.text = "Счет: " + _score;
 
     }
 

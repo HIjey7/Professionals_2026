@@ -3,45 +3,32 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
+    [SerializeField] private Transform _groundTransform;
+    [SerializeField] private float _groundRadius = 0.1f;
+    [SerializeField] private LayerMask _groundMask;
+    [SerializeField] private float _jumpForce = 5f;
+    [SerializeField] private float _moveSpeed = 3f;
+    private Rigidbody2D _body;
 
-    public float jumpForce = 5f;
-    private bool isGrounded;
-    public float moveSpeed = 3f;
-    private Rigidbody2D body;
-
-    void OnCollisionEnter2D(Collision2D collision)
+    private void Start()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
+        _body = GetComponent<Rigidbody2D>();
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-        }
-    }
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        body = GetComponent<Rigidbody2D>();
-    }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // Ожидание: если скорость будет = 0, то игрок будет стоять на месте, ничего происходить не будет
         float direction = Input.GetAxisRaw("Horizontal");
-        body.linearVelocity = new Vector2(direction * moveSpeed, body.linearVelocityY);
+        _body.linearVelocity = new Vector2(direction * _moveSpeed, _body.linearVelocityY);
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
-            body.linearVelocity = new Vector2(body.linearVelocityX, jumpForce);
+            _body.linearVelocity = new Vector2(_body.linearVelocityX, _jumpForce);
         }
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(_groundTransform.position, _groundRadius, _groundMask) != null;
     }
 }
